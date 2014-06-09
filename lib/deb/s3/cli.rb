@@ -110,7 +110,11 @@ class Deb::S3::CLI < Thor
     # examine all the files
     files.collect { |f| Dir.glob(f) }.flatten.each do |file|
       log("Examining package file #{File.basename(file)}")
-      pkg = Deb::S3::Package.parse_file(file)
+      pkg = if File.extname(file) == ".control"
+        Deb::S3::Package.parse_file(file)
+      else
+        Deb::S3::Package.parse_string(File.read(file))
+      end
 
       # copy over some options if they weren't given
       arch = options[:arch] || pkg.architecture
