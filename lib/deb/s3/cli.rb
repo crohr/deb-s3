@@ -111,9 +111,9 @@ class Deb::S3::CLI < Thor
     files.collect { |f| Dir.glob(f) }.flatten.each do |file|
       log("Examining package file #{File.basename(file)}")
       pkg = if File.extname(file) == ".control"
-        Deb::S3::Package.parse_file(file)
-      else
         Deb::S3::Package.parse_string(File.read(file))
+      else
+        Deb::S3::Package.parse_file(file)
       end
 
       # copy over some options if they weren't given
